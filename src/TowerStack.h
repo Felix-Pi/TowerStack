@@ -20,7 +20,7 @@ public:
 
 
 private:
-    int height = 4;
+    int tower_height = 4;
     int tower[MAX_HEIGHT][COLUMNS] = {
             {0, 1, 1, 1, 1, 1, 1, 0},
             {0, 1, 1, 1, 1, 1, 1, 0},
@@ -29,33 +29,31 @@ private:
     };
 
     int brick_animation_speed;
-public:
-    int getBrickAnimationSpeed() const;
-
-    void setBrickAnimationSpeed(int brickAnimationSpeed);
-
-private:
-
     int brick_size = 5;
+
+
+    int getTowerHeight();
+
+    int incrementTowerHeight();
+
+    void drawTower();
 
     void setBrickSize(int brickSize);
 
     int getBrickSize();
 
-
-    void drawTower();
-
     void generateBrick();
+
+    int getBrickAnimationSpeed() const;
+
+    void setBrickAnimationSpeed(int brickAnimationSpeed);
 
     void animateBrick();
 
     void drawBrick();
 
-    void moveBrick();
+    void button_pressed();
 
-    int getTowerHeight();
-
-    int incrementHeight();
 
     void setLed(int row, int column, bool state);
 

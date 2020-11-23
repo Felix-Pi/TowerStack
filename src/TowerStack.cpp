@@ -35,12 +35,12 @@ void TowerStack::setLed(int row, int column, bool state) {
 }
 
 int TowerStack::getTowerHeight() {
-    return height;
+    return tower_height;
 }
 
-int TowerStack::incrementHeight() {
-    if (height == 31) return -1;
-    return ++height;
+int TowerStack::incrementTowerHeight() {
+    if (tower_height == 31) return -1;
+    return ++tower_height;
 }
 
 void TowerStack::setBrickSize(int brickSize) {
@@ -68,7 +68,7 @@ void TowerStack::start() {
 }
 
 void TowerStack::generateBrick() {
-    int tower_height = incrementHeight();
+    int tower_height = incrementTowerHeight();
     int brick[8];
 
     for (int i = 0; i < 8; i++) {
@@ -129,5 +129,11 @@ void TowerStack::drawBrick() {
 
 void TowerStack::test() {
     animateBrick();
+}
+
+void TowerStack::button_pressed() {
+
+
+
 }
 
