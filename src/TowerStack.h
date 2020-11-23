@@ -16,8 +16,9 @@ public:
 
     void start();
 
-    void test();
+    void button_pressed();
 
+    void test();
 
 private:
     int tower_height = 4;
@@ -44,15 +45,13 @@ private:
 
     void generateBrick();
 
-    int getBrickAnimationSpeed() const;
-
     void setBrickAnimationSpeed(int brickAnimationSpeed);
+
+    int getBrickAnimationSpeed();
 
     void animateBrick();
 
     void drawBrick();
-
-    void button_pressed();
 
 
     void setLed(int row, int column, bool state);
