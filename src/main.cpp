@@ -43,6 +43,8 @@ void setup() {
     }
 
     tower.newGame();
+
+    tower.test();
 }
 
 

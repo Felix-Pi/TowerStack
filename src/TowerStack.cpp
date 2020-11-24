@@ -77,10 +77,7 @@ void TowerStack::newGame() {
 
 void TowerStack::test() {
     delay(2000);
-    for (int i = 0; i < 20; ++i) {
-        doBrickAnimationStep();
-        delay(1000);
-    }
+    animation_win();
 }
 
 void TowerStack::generateBrick() {
@@ -227,6 +224,40 @@ void TowerStack::button_pressed() {
     drawTower();
     generateBrick();
 }
+
+void TowerStack::animation_win() {
+    int max_brightness = 6;
+    int delay_time = 100;
+
+    for (int reps = 0; reps < 3; reps++) {
+        for (int brightness = 0; brightness < max_brightness; ++brightness) {
+            for (int device = 0; device < lc.getDeviceCount(); ++device) {
+                lc.setIntensity(device, brightness);
+            }
+            delay(delay_time);
+        }
+        for (int brightness = max_brightness; brightness >= 1; --brightness) {
+            for (int device = lc.getDeviceCount(); device >= 0; --device) {
+                lc.setIntensity(device, brightness);
+            }
+            delay(delay_time);
+        }
+    }
+
+    for (int row = getTowerHeight(); row >= default_tower_height; --row) {
+        for (int column = 0; column < 8; ++column) {
+            setLed(row, column, false);
+        }
+        delay(10 + 3 * row);
+    }
+
+}
+
+
+void TowerStack::animation_loose() {
+
+}
+
 
 
 

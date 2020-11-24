@@ -23,7 +23,8 @@ public:
     void timeBrickAnimation();
 
 private:
-    int tower_height;
+    int default_tower_height = 5;
+    int tower_height = default_tower_height;
     int tower[MAX_HEIGHT][COLUMNS];
 
     enum animation_direction {
@@ -44,6 +45,7 @@ private:
                 tower[i][j] = 0;
             }
         }
+        tower_height = 4;
 
         int tower_template[MAX_HEIGHT][COLUMNS] = {
                 {0, 1, 1, 1, 1, 1, 1, 0},
@@ -52,13 +54,11 @@ private:
                 {0, 0, 1, 1, 1, 1, 0, 0}
         };
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < tower_height; ++i) {
             for (int j = 0; j < 8; ++j) {
                 tower[i][j] = tower_template[i][j];
             }
         }
-
-        tower_height = 4;
     }
 
     long lastAnimationStepTime = millis();
@@ -100,13 +100,9 @@ private:
 
     void drawBrick();
 
-    void animation_win() {
+    void animation_win();
 
-    }
-
-    void animation_loose() {
-
-    }
+    void animation_loose();
 
     void setLed(int row, int column, bool state);
 
