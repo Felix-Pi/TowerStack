@@ -5,7 +5,6 @@
 #include <Wire.h>
 #include <pt.h>
 
-
 #define LCLOADPIN 10 // LC LOAD pin
 #define LCCLKPIN 11 // LC CLK pin
 #define LCDINPIN 12 // LC DataIn pin
@@ -17,7 +16,6 @@ LedControl lc = LedControl(LCDINPIN, LCCLKPIN, LCLOADPIN, 4);
 TowerStack tower(lc);
 
 int previous = HIGH;
-int reading;
 int state = LOW;
 
 void check_for_button_press() { //ToDo: digital read faster alternative?
@@ -44,8 +42,7 @@ void setup() {
         lc.clearDisplay(address);
     }
 
-    tower.start();
-    //tower.test();
+    tower.newGame();
 }
 
 

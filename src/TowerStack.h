@@ -14,7 +14,7 @@ class TowerStack {
 public:
     TowerStack(LedControl lc);
 
-    void start();
+    void newGame();
 
     void button_pressed();
 
@@ -23,21 +23,49 @@ public:
     void timeBrickAnimation();
 
 private:
-    int tower_height = 4;
-    int tower[MAX_HEIGHT][COLUMNS] = {
-            {0, 1, 1, 1, 1, 1, 1, 0},
-            {0, 1, 1, 1, 1, 1, 1, 0},
-            {0, 1, 1, 1, 1, 1, 1, 0},
-            {0, 0, 1, 1, 1, 1, 0, 0}
-    };
+    int tower_height;
+    int tower[MAX_HEIGHT][COLUMNS];
 
     enum animation_direction {
         LEFT, RIGHT
     };
 
+    void resetMatrix() {
+        for (int i = 0; i < 32; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                setLed(i, j, false);
+            }
+        }
+    }
+
+    void generateTower() {
+        for (int i = 0; i < 32; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                tower[i][j] = 0;
+            }
+        }
+
+        int tower_template[MAX_HEIGHT][COLUMNS] = {
+                {0, 1, 1, 1, 1, 1, 1, 0},
+                {0, 1, 1, 1, 1, 1, 1, 0},
+                {0, 1, 1, 1, 1, 1, 1, 0},
+                {0, 0, 1, 1, 1, 1, 0, 0}
+        };
+
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 8; ++j) {
+                tower[i][j] = tower_template[i][j];
+            }
+        }
+
+        tower_height = 4;
+    }
+
     long lastAnimationStepTime = millis();
 
     int brick_animation_step = 0;
+
+    void restBrickAnimationStep();
 
     animation_direction brick_animation_direction = RIGHT;
 

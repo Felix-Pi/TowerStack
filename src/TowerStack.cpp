@@ -25,14 +25,14 @@ void TowerStack::setLed(int row, int column, bool state) {
     }
     if (row >= 16 && row < 24) {
         device = 1;
-        row_ = row - (8 * 2);
+        row_ = row - 8 * 2;
     }
     if (row >= 24 && row < 32) {
         device = 0;
-        row_ = row - (8 * 3);
+        row_ = row - 8 * 3;
     }
 
-    lc.setLed(device, row, column, state);
+    lc.setLed(device, column, row_, state);
 }
 
 int TowerStack::getTowerHeight() {
@@ -55,7 +55,7 @@ int TowerStack::getBrickSize() {
 void TowerStack::drawTower() {
     for (int row = 0; row < getTowerHeight(); ++row) {
         for (int column = 0; column < 8; ++column) {
-            setLed(column, row, tower[row][column] == 1);
+            setLed(row, column, tower[row][column] == 1);
         }
     }
 }
@@ -69,16 +69,6 @@ void TowerStack::start() {
     drawTower();
     generateBrick();
     drawBrick();
-
-/*
-    for (int row = 0; row < 32; ++row) {
-        for (int column = 0; column < 8; ++column) {
-            setLed(column, row, true);
-            delay(50);
-        }
-    }
-    */
-
 }
 
 void TowerStack::generateBrick() {
@@ -108,14 +98,6 @@ TowerStack::animation_direction TowerStack::getBrickAnimationDirection() {
 
 void TowerStack::setBrickAnimationDirection(TowerStack::animation_direction brickAnimationDirection) {
     brick_animation_direction = brickAnimationDirection;
-}
-
-void TowerStack::test() {
-    delay(2000);
-    for (int i = 0; i < 20; ++i) {
-        doBrickAnimationStep();
-        delay(1000);
-    }
 }
 
 void TowerStack::timeBrickAnimation() {
@@ -184,7 +166,7 @@ void TowerStack::drawBrick() {
     int row = getTowerHeight() - 1;
 
     for (int column = 0; column < 8; ++column) {
-        setLed(column, row, tower[row][column] == 1);
+        setLed(row, column, tower[row][column] == 1);
         Serial.print(tower[row][column]);
     }
     Serial.println();
@@ -209,7 +191,6 @@ void TowerStack::button_pressed() {
     drawTower();
     generateBrick();
 }
-
 
 
 
