@@ -84,6 +84,11 @@ void TowerStack::generateBrick() {
     }
 }
 
+
+void TowerStack::restBrickAnimationStep() {
+    brick_animation_step = 0;
+}
+
 int TowerStack::getBrickAnimationSpeed() {
     return brick_animation_speed;
 }
