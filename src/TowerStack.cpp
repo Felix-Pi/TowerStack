@@ -148,6 +148,7 @@ void TowerStack::drawTower() {
 
 /* brick */
 void TowerStack::setBrickSize(int brickSize) {
+    if (brickSize < 1 || brickSize > 6) return;
     brick_size = brickSize;
 }
 
