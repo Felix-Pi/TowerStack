@@ -1,7 +1,7 @@
 # TowerStack
 >  little game using LED matrix 
 
-![Image of Yaktocat](https://github.com/Felix-Pi/TowerStack/tree/main/images/TowerStack_hardware.png)
+![image_hardware](https://github.com/Felix-Pi/TowerStack/blob/main/images/TowerStack_hardware.png?raw=true)
 
 
 ## Hardware 
