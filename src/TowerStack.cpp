@@ -60,15 +60,29 @@ void TowerStack::drawTower() {
     }
 }
 
-void TowerStack::start() {
-    setBrickSize(4);
-    int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
-
-    setBrickAnimationSpeed(brick_animation_speed_);
-
+void TowerStack::newGame() {
+    resetMatrix();
+    delay(500);
+    generateTower();
     drawTower();
+
+    setBrickSize(4);
+    setBrickAnimationDirection(RIGHT);
+    restBrickAnimationStep();
+
+    int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
+    setBrickAnimationSpeed(brick_animation_speed_);
+    delay(1000);
     generateBrick();
     drawBrick();
+}
+
+void TowerStack::test() {
+    delay(2000);
+    for (int i = 0; i < 20; ++i) {
+        doBrickAnimationStep();
+        delay(1000);
+    }
 }
 
 void TowerStack::generateBrick() {
@@ -182,17 +196,34 @@ void TowerStack::button_pressed() {
     int brick_row = getTowerHeight() - 1;
     int tower_row = getTowerHeight() - 2;
 
+    int new_brick_size = 0;
+
+    int blink[new_brick_size];
+
     for (int column = 0; column < 8; ++column) {
         if (tower[brick_row][column] == 1 && tower[tower_row][column] == 1) {
             tower[brick_row][column] = 1;
+            new_brick_size = ++new_brick_size;
         } else {
             tower[brick_row][column] = 0;
         }
     }
 
+
+    //lose
+    if (new_brick_size == 0) {
+        newGame();
+        return;
+    }
+
+    setBrickSize(new_brick_size);
+
+
     //check win
     //check loss
 
+
+    restBrickAnimationStep();
     drawTower();
     generateBrick();
 }
