@@ -31,35 +31,9 @@ private:
         LEFT, RIGHT
     };
 
-    void resetMatrix() {
-        for (int i = 0; i < 32; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                setLed(i, j, false);
-            }
-        }
-    }
+    void resetMatrix(int delay_time);
 
-    void generateTower() {
-        for (int i = 0; i < 32; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                tower[i][j] = 0;
-            }
-        }
-        tower_height = 4;
-
-        int tower_template[MAX_HEIGHT][COLUMNS] = {
-                {0, 1, 1, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 1, 1, 1, 0},
-                {0, 1, 1, 1, 1, 1, 1, 0},
-                {0, 0, 1, 1, 1, 1, 0, 0}
-        };
-
-        for (int i = 0; i < tower_height; ++i) {
-            for (int j = 0; j < 8; ++j) {
-                tower[i][j] = tower_template[i][j];
-            }
-        }
-    }
+    void generateTower();
 
     long lastAnimationStepTime = millis();
 

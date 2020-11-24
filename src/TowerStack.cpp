@@ -35,8 +35,39 @@ void TowerStack::setLed(int row, int column, bool state) {
     lc.setLed(device, column, row_, state);
 }
 
+void TowerStack::resetMatrix(int delay_time) {
+    for (int i = 0; i < 32; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            setLed(i, j, false);
+        }
+        delay(delay_time);
+    }
+}
+
 int TowerStack::getTowerHeight() {
     return tower_height;
+}
+
+void TowerStack::generateTower() {
+    for (int i = 0; i < 32; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            tower[i][j] = 0;
+        }
+    }
+    tower_height = 4;
+
+    int tower_template[MAX_HEIGHT][COLUMNS] = {
+            {0, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 0},
+            {0, 1, 1, 1, 1, 1, 1, 0},
+            {0, 0, 1, 1, 1, 1, 0, 0}
+    };
+
+    for (int i = 0; i < tower_height; ++i) {
+        for (int j = 0; j < 8; ++j) {
+            tower[i][j] = tower_template[i][j];
+        }
+    }
 }
 
 int TowerStack::incrementTowerHeight() {
@@ -61,7 +92,7 @@ void TowerStack::drawTower() {
 }
 
 void TowerStack::newGame() {
-    resetMatrix();
+    resetMatrix(0);
     delay(500);
     generateTower();
     drawTower();
@@ -76,8 +107,7 @@ void TowerStack::newGame() {
 }
 
 void TowerStack::test() {
-    delay(2000);
-    animation_win();
+
 }
 
 void TowerStack::generateBrick() {
@@ -209,7 +239,7 @@ void TowerStack::button_pressed() {
 
     //lose
     if (new_brick_size == 0) {
-        animation_win();
+        animation_loose();
         newGame();
         return;
     }
@@ -255,7 +285,19 @@ void TowerStack::animation_win() {
 
 
 void TowerStack::animation_loose() {
+    int delay_time = 15;
 
+    resetMatrix(delay_time);
+
+    for (int device = 0; device < lc.getDeviceCount(); ++device) {
+        for (int row = 0; row < 8; ++row) {
+            lc.setLed(device, row, row, true);
+            lc.setLed(device, row, 7 - row, true);
+            delay(15);
+        }
+    }
+
+    resetMatrix(delay_time);
 }
 
 
