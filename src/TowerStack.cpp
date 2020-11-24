@@ -221,7 +221,7 @@ void TowerStack::animateBrick(int size, int height, animation_direction directio
     drawBrick();
 }
 
-void TowerStack::doBrickAnimationStep() { //ToDo: fix double delay
+void TowerStack::doBrickAnimationStep() {
     int size = getBrickSize();
     int height = getTowerHeight() - 1;
 
@@ -236,6 +236,7 @@ void TowerStack::doBrickAnimationStep() { //ToDo: fix double delay
 
         if (brick_animation_step == steps_left_to_right) {
             setBrickAnimationDirection(LEFT);
+            brick_animation_step = --brick_animation_step;
             return;
         }
     }
@@ -247,6 +248,7 @@ void TowerStack::doBrickAnimationStep() { //ToDo: fix double delay
 
         if (brick_animation_step < 0) {
             setBrickAnimationDirection(RIGHT);
+            brick_animation_step = ++brick_animation_step;
             return;
         }
     }
