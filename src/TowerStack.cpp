@@ -45,16 +45,21 @@ void TowerStack::resetMatrix(int delay_time) {
 }
 
 /* game */
+void TowerStack::setLevel(int tower_height) {
+    int animation_speed = 150 - (tower_height * 4);
+    setBrickAnimationSpeed(animation_speed);
+}
+
 void TowerStack::newGame() {
     resetMatrix(0);
     delay(500);
     generateTower();
     drawTower();
 
+    setLevel(tower_height);
+
     setBrickSize(4);
 
-    int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
-    setBrickAnimationSpeed(brick_animation_speed_);
     delay(1000);
     generateBrick();
     drawBrick();
@@ -83,7 +88,7 @@ void TowerStack::button_pressed() {
     }
 
     //win
-    if (tower_height == 31) {
+    if (tower_height == 32) {
         resetTower();
         animation_win();
         newGame();
@@ -91,6 +96,7 @@ void TowerStack::button_pressed() {
     }
 
     setBrickSize(new_brick_size);
+    setLevel(tower_height);
     drawTower();
     generateBrick();
 }
@@ -297,6 +303,7 @@ void TowerStack::animation_loose() {
 
     resetMatrix(delay_time);
 }
+
 
 
 

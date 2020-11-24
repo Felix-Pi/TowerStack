@@ -25,6 +25,9 @@ public:
     void timeBrickAnimation();
 
 private:
+    /* game */
+    void setLevel(int tower_height);
+
     /* tower */
     int tower_height = 4;
     int tower[MAX_HEIGHT][COLUMNS];
