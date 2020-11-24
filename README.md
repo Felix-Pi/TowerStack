@@ -27,5 +27,6 @@ Lever
 ```
 
 ## Level
+```
 animation_speed = 150 - (tower_height * 4);
-
+```
