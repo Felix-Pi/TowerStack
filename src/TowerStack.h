@@ -20,6 +20,8 @@ public:
 
     void test();
 
+    void timeBrickAnimation();
+
 private:
     int tower_height = 4;
     int tower[MAX_HEIGHT][COLUMNS] = {
@@ -33,6 +35,7 @@ private:
         LEFT, RIGHT
     };
 
+    long lastAnimationStepTime = millis();
 
     int brick_animation_step = 0;
 

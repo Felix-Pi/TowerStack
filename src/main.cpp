@@ -10,7 +10,7 @@
 #define LCCLKPIN 11 // LC CLK pin
 #define LCDINPIN 12 // LC DataIn pin
 
-#define BUTTON_PIN 2
+#define BUTTON_PIN 13
 
 LedControl lc = LedControl(LCDINPIN, LCCLKPIN, LCLOADPIN, 4);
 
@@ -20,7 +20,7 @@ int previous = HIGH;
 int reading;
 int state = LOW;
 
-void check_for_button_press() {
+void check_for_button_press() { //ToDo: digital read faster alternative?
     Serial.println("check_for_button_press()");
 
     int reading = digitalRead(BUTTON_PIN);
@@ -31,9 +31,6 @@ void check_for_button_press() {
     }
     previous = reading;
 }
-
-
-
 
 
 void setup() {
@@ -48,11 +45,11 @@ void setup() {
     }
 
     tower.start();
-    tower.test();
+    //tower.test();
 }
 
 
 void loop() {
     check_for_button_press();
-
+    tower.timeBrickAnimation();
 }

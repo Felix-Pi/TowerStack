@@ -118,6 +118,13 @@ void TowerStack::test() {
     }
 }
 
+void TowerStack::timeBrickAnimation() {
+    if (lastAnimationStepTime + getBrickAnimationSpeed() <= millis()) {
+        doBrickAnimationStep();
+        lastAnimationStepTime = millis();
+    }
+}
+
 
 void TowerStack::animateBrick(int size, int height, animation_direction direction) {
     int tail, head;
@@ -144,7 +151,7 @@ void TowerStack::doBrickAnimationStep() {
     int size = getBrickSize();
     int height = getTowerHeight() - 1;
 
-    int steps_left_to_right = 8 - size; //3
+    int steps_left_to_right = 8 - size;
 
     animation_direction direction = getBrickAnimationDirection();
 
@@ -202,6 +209,7 @@ void TowerStack::button_pressed() {
     drawTower();
     generateBrick();
 }
+
 
 
 
