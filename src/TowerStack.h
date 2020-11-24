@@ -1,3 +1,7 @@
+//
+// Created by Felix Pieschka on 23.11.20.
+//
+
 #ifndef TOWERSTACK_TOWERSTACK_H
 #define TOWERSTACK_TOWERSTACK_H
 
@@ -18,50 +22,57 @@ public:
 
     void button_pressed();
 
-    void test();
-
     void timeBrickAnimation();
 
 private:
-    int default_tower_height = 5;
-    int tower_height = default_tower_height;
+    /* tower */
+    int tower_height = 4;
     int tower[MAX_HEIGHT][COLUMNS];
 
+    /* brick */
+    int brick_size;
+
+    /* brick animation */
+    long lastAnimationStepTime = millis();
+    int brick_animation_step = 0;
     enum animation_direction {
         LEFT, RIGHT
     };
+    animation_direction brick_animation_direction = RIGHT;
+    int brick_animation_speed;
+
+
+    /* matrix */
+    void setLed(int row, int column, bool state);
 
     void resetMatrix(int delay_time);
 
-    void generateTower();
-
-    long lastAnimationStepTime = millis();
-
-    int brick_animation_step = 0;
-
-    void restBrickAnimationStep();
-
-    animation_direction brick_animation_direction = RIGHT;
-
-    animation_direction getBrickAnimationDirection();
-
-    void setBrickAnimationDirection(animation_direction brickAnimationDirection);
-
-    int brick_animation_speed;
-    int brick_size;
-
+    /* tower */
+    void resetTower();
 
     int getTowerHeight();
+
+    void generateTower();
 
     int incrementTowerHeight();
 
     void drawTower();
 
+    /* brick */
     void setBrickSize(int brickSize);
 
     int getBrickSize();
 
     void generateBrick();
+
+    void drawBrick();
+
+    /* brick animation */
+    void resetBrickAnimationStep();
+
+    void setBrickAnimationDirection(animation_direction brickAnimationDirection);
+
+    animation_direction getBrickAnimationDirection();
 
     int getBrickAnimationSpeed();
 
@@ -71,14 +82,10 @@ private:
 
     void doBrickAnimationStep();
 
-
-    void drawBrick();
-
+    /* animations */
     void animation_win();
 
     void animation_loose();
-
-    void setLed(int row, int column, bool state);
 
 };
 

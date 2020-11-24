@@ -1,9 +1,10 @@
+//
+// Created by Felix Pieschka on 23.11.20.
+//
+
 #include <Arduino.h>
 #include <LedControl.h>
 #include <TowerStack.h>
-
-#include <Wire.h>
-#include <pt.h>
 
 #define LCLOADPIN 10 // LC LOAD pin
 #define LCCLKPIN 11 // LC CLK pin
@@ -19,8 +20,6 @@ int previous = HIGH;
 int state = LOW;
 
 void check_for_button_press() { //ToDo: digital read faster alternative?
-    Serial.println("check_for_button_press()");
-
     int reading = digitalRead(BUTTON_PIN);
 
     if (reading == HIGH && previous == LOW) {
@@ -29,7 +28,6 @@ void check_for_button_press() { //ToDo: digital read faster alternative?
     }
     previous = reading;
 }
-
 
 void setup() {
     Serial.begin(9600);
@@ -43,10 +41,7 @@ void setup() {
     }
 
     tower.newGame();
-
-    tower.test();
 }
-
 
 void loop() {
     check_for_button_press();

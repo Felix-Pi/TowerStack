@@ -10,7 +10,7 @@ TowerStack::TowerStack(LedControl lc) : lc(lc) {
     int devices = lc.getDeviceCount();
 }
 
-
+/* matrix */
 void TowerStack::setLed(int row, int column, bool state) {
     int device, row_;
     if (row < 0 || row >= MAX_HEIGHT || column < 0 || column > 7) return;
@@ -44,17 +44,74 @@ void TowerStack::resetMatrix(int delay_time) {
     }
 }
 
-int TowerStack::getTowerHeight() {
-    return tower_height;
+/* game */
+void TowerStack::newGame() {
+    resetMatrix(0);
+    delay(500);
+    generateTower();
+    drawTower();
+
+    setBrickSize(4);
+
+    int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
+    setBrickAnimationSpeed(brick_animation_speed_);
+    delay(1000);
+    generateBrick();
+    drawBrick();
 }
 
-void TowerStack::generateTower() {
+void TowerStack::button_pressed() {
+    int brick_row = getTowerHeight() - 1;
+    int tower_row = getTowerHeight() - 2;
+
+    int new_brick_size = 0;
+
+    for (int column = 0; column < 8; ++column) {
+        if (tower[brick_row][column] == 1 && tower[tower_row][column] == 1) {
+            tower[brick_row][column] = 1;
+            new_brick_size = ++new_brick_size;
+        } else {
+            tower[brick_row][column] = 0;
+        }
+    }
+
+    //lose
+    if (new_brick_size == 0) {
+        animation_loose();
+        newGame();
+        return;
+    }
+
+    //win
+    if (tower_height == 31) {
+        resetTower();
+        animation_win();
+        newGame();
+        return;
+    }
+
+    setBrickSize(new_brick_size);
+    drawTower();
+    generateBrick();
+}
+
+/* tower */
+void TowerStack::resetTower() {
+    tower_height = 4;
+
     for (int i = 0; i < 32; ++i) {
         for (int j = 0; j < 8; ++j) {
             tower[i][j] = 0;
         }
     }
-    tower_height = 4;
+}
+
+int TowerStack::getTowerHeight() {
+    return tower_height;
+}
+
+void TowerStack::generateTower() {
+    resetTower();
 
     int tower_template[MAX_HEIGHT][COLUMNS] = {
             {0, 1, 1, 1, 1, 1, 1, 0},
@@ -75,14 +132,6 @@ int TowerStack::incrementTowerHeight() {
     return ++tower_height;
 }
 
-void TowerStack::setBrickSize(int brickSize) {
-    brick_size = brickSize;
-}
-
-int TowerStack::getBrickSize() {
-    return brick_size;
-}
-
 void TowerStack::drawTower() {
     for (int row = 0; row < getTowerHeight(); ++row) {
         for (int column = 0; column < 8; ++column) {
@@ -91,28 +140,18 @@ void TowerStack::drawTower() {
     }
 }
 
-void TowerStack::newGame() {
-    resetMatrix(0);
-    delay(500);
-    generateTower();
-    drawTower();
-
-    setBrickSize(4);
-
-    int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
-    setBrickAnimationSpeed(brick_animation_speed_);
-    delay(1000);
-    generateBrick();
-    drawBrick();
+/* brick */
+void TowerStack::setBrickSize(int brickSize) {
+    brick_size = brickSize;
 }
 
-void TowerStack::test() {
-
+int TowerStack::getBrickSize() {
+    return brick_size;
 }
 
 void TowerStack::generateBrick() {
     setBrickAnimationDirection(RIGHT);
-    restBrickAnimationStep();
+    resetBrickAnimationStep();
 
     int height = incrementTowerHeight();
     int brick[8];
@@ -126,9 +165,25 @@ void TowerStack::generateBrick() {
     }
 }
 
+void TowerStack::drawBrick() {
+    int row = getTowerHeight() - 1;
 
-void TowerStack::restBrickAnimationStep() {
+    for (int column = 0; column < 8; ++column) {
+        setLed(row, column, tower[row][column] == 1);
+    }
+}
+
+/* brick animation */
+void TowerStack::resetBrickAnimationStep() {
     brick_animation_step = 0;
+}
+
+void TowerStack::setBrickAnimationDirection(TowerStack::animation_direction brickAnimationDirection) {
+    brick_animation_direction = brickAnimationDirection;
+}
+
+TowerStack::animation_direction TowerStack::getBrickAnimationDirection() {
+    return brick_animation_direction;
 }
 
 int TowerStack::getBrickAnimationSpeed() {
@@ -138,22 +193,6 @@ int TowerStack::getBrickAnimationSpeed() {
 void TowerStack::setBrickAnimationSpeed(int brickAnimationSpeed) {
     brick_animation_speed = brickAnimationSpeed;
 }
-
-TowerStack::animation_direction TowerStack::getBrickAnimationDirection() {
-    return brick_animation_direction;
-}
-
-void TowerStack::setBrickAnimationDirection(TowerStack::animation_direction brickAnimationDirection) {
-    brick_animation_direction = brickAnimationDirection;
-}
-
-void TowerStack::timeBrickAnimation() {
-    if (lastAnimationStepTime + getBrickAnimationSpeed() <= millis()) {
-        doBrickAnimationStep();
-        lastAnimationStepTime = millis();
-    }
-}
-
 
 void TowerStack::animateBrick(int size, int height, animation_direction direction) {
     int tail, head;
@@ -176,7 +215,7 @@ void TowerStack::animateBrick(int size, int height, animation_direction directio
     drawBrick();
 }
 
-void TowerStack::doBrickAnimationStep() {
+void TowerStack::doBrickAnimationStep() { //ToDo: fix double delay
     int size = getBrickSize();
     int height = getTowerHeight() - 1;
 
@@ -187,7 +226,6 @@ void TowerStack::doBrickAnimationStep() {
     /* animateBrick left -> right */
     if (direction == RIGHT) {
         animateBrick(size, height, direction);
-
         brick_animation_step = ++brick_animation_step;
 
         if (brick_animation_step == steps_left_to_right) {
@@ -208,53 +246,14 @@ void TowerStack::doBrickAnimationStep() {
     }
 }
 
-
-void TowerStack::drawBrick() {
-    int row = getTowerHeight() - 1;
-
-    for (int column = 0; column < 8; ++column) {
-        setLed(row, column, tower[row][column] == 1);
-        Serial.print(tower[row][column]);
+void TowerStack::timeBrickAnimation() {
+    if (lastAnimationStepTime + getBrickAnimationSpeed() <= millis()) {
+        doBrickAnimationStep();
+        lastAnimationStepTime = millis();
     }
-    Serial.println();
 }
 
-
-void TowerStack::button_pressed() {
-    int brick_row = getTowerHeight() - 1;
-    int tower_row = getTowerHeight() - 2;
-
-    int new_brick_size = 0;
-
-    int blink[new_brick_size];
-
-    for (int column = 0; column < 8; ++column) {
-        if (tower[brick_row][column] == 1 && tower[tower_row][column] == 1) {
-            tower[brick_row][column] = 1;
-            new_brick_size = ++new_brick_size;
-        } else {
-            tower[brick_row][column] = 0;
-        }
-    }
-
-    //lose
-    if (new_brick_size == 0) {
-        animation_loose();
-        newGame();
-        return;
-    }
-
-    if (tower_height == 31) {
-        animation_win();
-        newGame();
-        return;
-    }
-
-    setBrickSize(new_brick_size);
-    drawTower();
-    generateBrick();
-}
-
+/* animations */
 void TowerStack::animation_win() {
     int max_brightness = 6;
     int delay_time = 100;
@@ -274,7 +273,7 @@ void TowerStack::animation_win() {
         }
     }
 
-    for (int row = getTowerHeight(); row >= default_tower_height; --row) {
+    for (int row = getTowerHeight(); row >= tower_height; --row) {
         for (int column = 0; column < 8; ++column) {
             setLed(row, column, false);
         }
@@ -282,7 +281,6 @@ void TowerStack::animation_win() {
     }
 
 }
-
 
 void TowerStack::animation_loose() {
     int delay_time = 15;
