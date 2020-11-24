@@ -67,8 +67,6 @@ void TowerStack::newGame() {
     drawTower();
 
     setBrickSize(4);
-    setBrickAnimationDirection(RIGHT);
-    restBrickAnimationStep();
 
     int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
     setBrickAnimationSpeed(brick_animation_speed_);
@@ -86,6 +84,9 @@ void TowerStack::test() {
 }
 
 void TowerStack::generateBrick() {
+    setBrickAnimationDirection(RIGHT);
+    restBrickAnimationStep();
+
     int height = incrementTowerHeight();
     int brick[8];
 
@@ -209,21 +210,20 @@ void TowerStack::button_pressed() {
         }
     }
 
-
     //lose
     if (new_brick_size == 0) {
+        animation_win();
+        newGame();
+        return;
+    }
+
+    if (tower_height == 31) {
+        animation_win();
         newGame();
         return;
     }
 
     setBrickSize(new_brick_size);
-
-
-    //check win
-    //check loss
-
-
-    restBrickAnimationStep();
     drawTower();
     generateBrick();
 }

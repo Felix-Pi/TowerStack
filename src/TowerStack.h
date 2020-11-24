@@ -100,6 +100,13 @@ private:
 
     void drawBrick();
 
+    void animation_win() {
+
+    }
+
+    void animation_loose() {
+
+    }
 
     void setLed(int row, int column, bool state);
 
