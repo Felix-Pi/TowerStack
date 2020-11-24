@@ -32,6 +32,10 @@ void check_for_button_press() {
     previous = reading;
 }
 
+
+
+
+
 void setup() {
     Serial.begin(9600);
 
@@ -44,10 +48,11 @@ void setup() {
     }
 
     tower.start();
+    tower.test();
 }
 
 
 void loop() {
     check_for_button_press();
-    //tower.test();
+
 }

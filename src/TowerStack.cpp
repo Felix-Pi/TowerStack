@@ -52,7 +52,6 @@ int TowerStack::getBrickSize() {
     return brick_size;
 }
 
-
 void TowerStack::drawTower() {
     for (int row = 0; row < getTowerHeight(); ++row) {
         for (int column = 0; column < 8; ++column) {
@@ -62,21 +61,23 @@ void TowerStack::drawTower() {
 }
 
 void TowerStack::start() {
-/*
+    setBrickSize(4);
     int brick_animation_speed_ = 150 - (getTowerHeight() * 4);
 
     setBrickAnimationSpeed(brick_animation_speed_);
 
     drawTower();
     generateBrick();
-*/
+    drawBrick();
 
+/*
     for (int row = 0; row < 32; ++row) {
         for (int column = 0; column < 8; ++column) {
             setLed(column, row, true);
             delay(50);
         }
     }
+    */
 
 }
 
@@ -101,33 +102,76 @@ void TowerStack::setBrickAnimationSpeed(int brickAnimationSpeed) {
     brick_animation_speed = brickAnimationSpeed;
 }
 
-void TowerStack::animateBrick() {
+TowerStack::animation_direction TowerStack::getBrickAnimationDirection() {
+    return brick_animation_direction;
+}
+
+void TowerStack::setBrickAnimationDirection(TowerStack::animation_direction brickAnimationDirection) {
+    brick_animation_direction = brickAnimationDirection;
+}
+
+void TowerStack::test() {
+    delay(2000);
+    for (int i = 0; i < 20; ++i) {
+        doBrickAnimationStep();
+        delay(1000);
+    }
+}
+
+
+void TowerStack::animateBrick(int size, int height, animation_direction direction) {
+    int tail, head;
+
+    /* animateBrick left -> right */
+    if (direction == RIGHT) {
+        tail = brick_animation_step;
+        head = brick_animation_step + size;
+    }
+
+    /* animateBrick right -> left */
+    if (direction == LEFT) {
+        tail = brick_animation_step + size;
+        head = brick_animation_step;
+    }
+
+    tower[height][tail] = 0;
+    tower[height][head] = 1;
+
+    drawBrick();
+}
+
+void TowerStack::doBrickAnimationStep() {
     int size = getBrickSize();
     int height = getTowerHeight() - 1;
 
-    //left -> right
-    for (int i = 0; i < 8 - size; ++i) {
-        delay(getBrickAnimationSpeed());
-        int tail = i;
-        int head = i + size;
+    int steps_left_to_right = 8 - size; //3
 
-        tower[height][tail] = 0;
-        tower[height][head] = 1;
-        drawBrick();
+    animation_direction direction = getBrickAnimationDirection();
+
+    /* animateBrick left -> right */
+    if (direction == RIGHT) {
+        animateBrick(size, height, direction);
+
+        brick_animation_step = ++brick_animation_step;
+
+        if (brick_animation_step == steps_left_to_right) {
+            setBrickAnimationDirection(LEFT);
+            return;
+        }
     }
 
-    //right -> left
-    for (int i = 7 - size; i >= 0; --i) {
-        delay(getBrickAnimationSpeed());
-        int tail = i + size;
-        int head = i;
+    /* animateBrick right -> left */
+    if (direction == LEFT) {
+        animateBrick(size, height, direction);
+        brick_animation_step = --brick_animation_step;
 
-        tower[height][tail] = 0;
-        tower[height][head] = 1;
-        drawBrick();
+        if (brick_animation_step < 0) {
+            setBrickAnimationDirection(RIGHT);
+            return;
+        }
     }
-
 }
+
 
 void TowerStack::drawBrick() {
     int row = getTowerHeight() - 1;
@@ -139,10 +183,6 @@ void TowerStack::drawBrick() {
     Serial.println();
 }
 
-
-void TowerStack::test() {
-    animateBrick();
-}
 
 void TowerStack::button_pressed() {
     int brick_row = getTowerHeight() - 1;
@@ -161,7 +201,8 @@ void TowerStack::button_pressed() {
 
     drawTower();
     generateBrick();
-    animateBrick();
 }
+
+
 
 

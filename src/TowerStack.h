@@ -29,8 +29,21 @@ private:
             {0, 0, 1, 1, 1, 1, 0, 0}
     };
 
+    enum animation_direction {
+        LEFT, RIGHT
+    };
+
+
+    int brick_animation_step = 0;
+
+    animation_direction brick_animation_direction = RIGHT;
+
+    animation_direction getBrickAnimationDirection();
+
+    void setBrickAnimationDirection(animation_direction brickAnimationDirection);
+
     int brick_animation_speed;
-    int brick_size = 5;
+    int brick_size;
 
 
     int getTowerHeight();
@@ -45,11 +58,14 @@ private:
 
     void generateBrick();
 
-    void setBrickAnimationSpeed(int brickAnimationSpeed);
-
     int getBrickAnimationSpeed();
 
-    void animateBrick();
+    void setBrickAnimationSpeed(int brickAnimationSpeed);
+
+    void animateBrick(int size, int height, animation_direction direction);
+
+    void doBrickAnimationStep();
+
 
     void drawBrick();
 
